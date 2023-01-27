@@ -61,7 +61,6 @@ jobs:
           echo ::set-output name=COMMIT_LOG::$COMMIT_LOG
       - uses: ncipollo/release-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.ownEnvVars.outputs.PACKAGE_VERSION }}
           commit: main
           body: ${{ steps.ownEnvVars.outputs.COMMIT_LOG }}
