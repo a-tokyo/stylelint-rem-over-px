@@ -2,6 +2,12 @@
 
 A stylelint rule to enforce the usage of rem units over px units. It can also be used to migrate a project that uses px to use rem.
 
+<a href="https://npmjs.com/package/stylelint-rem-over-px">
+  <img src="https://img.shields.io/npm/v/stylelint-rem-over-px.svg"></img>
+  <img src="https://img.shields.io/npm/dt/stylelint-rem-over-px.svg"></img>
+</a>
+<a href="https://twitter.com/intent/follow?screen_name=ahmad_tokyo"><img src="https://img.shields.io/twitter/follow/ahmad_tokyo.svg?label=Follow%20@ahmad_tokyo" alt="Follow @ahmad_tokyo"></img></a>
+
 ```css
 width: 10px; // error
 height: 1.5rem; // ok
