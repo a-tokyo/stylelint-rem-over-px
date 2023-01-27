@@ -25,9 +25,7 @@ jobs:
       - name: Install
         run: yarn install
       - name: Test
-        run: yarn test --ci --bail
-      - name: Build
-        run: NODE_ENV=production yarn build
+        run: yarn test
 
   release_publish:
     name: Release to Github and publish to NPM
