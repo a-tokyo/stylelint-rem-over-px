@@ -52,8 +52,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install
         run: yarn install
-      - name: Build
-        run: NODE_ENV=production yarn build
       - name: Setup env vars
         id: ownEnvVars
         run: |
