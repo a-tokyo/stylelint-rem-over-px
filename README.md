@@ -1,7 +1,5 @@
 # stylelint-rem-over-px
 
-![https://travis-ci.org/a-tokyo/stylelint-rem-over-px](https://travis-ci.org/a-tokyo/stylelint-rem-over-px.svg?branch=master)
-
 A stylelint rule to enforce the usage of rem units over px units. It can also be used to migrate a project that uses px to use rem.
 
 ```css
