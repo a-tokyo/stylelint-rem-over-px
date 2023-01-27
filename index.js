@@ -4,7 +4,7 @@ const stylelint = require('stylelint');
 const valueParser = require('postcss-value-parser');
 
 /** rule name */
-const ruleName = 'rem-over-px';
+const ruleName = 'rem-over-px/rem-over-px';
 
 /** rule messages */
 const messages = stylelint.utils.ruleMessages(ruleName, {

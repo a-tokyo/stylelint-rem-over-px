@@ -30,9 +30,9 @@ Add it to your stylelint config
   ],
   "rules": {
     // ...
-    "rem-over-px": [true, { "ignore": ["1px"] }],
+    "rem-over-px/rem-over-px": [true, { "ignore": ["1px"] }],
     // or just:
-    "rem-over-px": true,
+    "rem-over-px/rem-over-px": true,
     // ...
   }
 }
@@ -54,7 +54,7 @@ ignore check for functions.
 
 ```javascript
 // all 1px is ok
-"rem-over-px": [true, { "ignore": ["1px"] }],
+"rem-over-px/rem-over-px": [true, { "ignore": ["1px"] }],
 ```
 
 ```css
@@ -73,7 +73,7 @@ ignore check for functions.
 ```javascript
 //  - all `1px` or `font` is ok
 //  - rem(Npx) is ok
-"rem-over-px": [true, { "ignore": ["1px", "font"], "ignoreFunctions": ["rem"] }],
+"rem-over-px/rem-over-px": [true, { "ignore": ["1px", "font"], "ignoreFunctions": ["rem"] }],
 ```
 
 ```css
@@ -91,7 +91,7 @@ ignore check for functions.
 
 ```javascript
 // only `border + 1px` is ok
-"rem-over-px": [true, { "ignore": ["border 1px"] }],
+"rem-over-px/rem-over-px": [true, { "ignore": ["border 1px"] }],
 ```
 
 ```css
