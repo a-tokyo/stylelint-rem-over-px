@@ -34,7 +34,7 @@ const defaultSecondaryOptions = {
 const regexPX = new RegExp(/(\d+\.?\d*)px/, 'g');
 
 /** Converts a string with px units to rem */
-const _pxToRem = (CSSString = '', fontSize) =>
+const _pxToRem = (CSSString = '', fontSize = defaultSecondaryOptions.fontSize || 16) =>
   CSSString.replace(regexPX, (match, n) => `${n / fontSize}rem`);
 
 /** checks if prop is in ignore list */
