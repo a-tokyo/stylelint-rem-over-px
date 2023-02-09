@@ -65,6 +65,17 @@ jobs:
       #     tag: ${{ steps.ownEnvVars.outputs.PACKAGE_VERSION }}
       #     commit: main
       #     body: ${{ steps.ownEnvVars.outputs.COMMIT_LOG }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.ownEnvVars.outputs.PACKAGE_VERSION }}
+          release_name: ${{ steps.ownEnvVars.outputs.PACKAGE_VERSION }}
+          body: ${{ steps.ownEnvVars.outputs.COMMIT_LOG }}
+          draft: false
+          prerelease: false
       - name: npm publish
         run: npm publish
         env:
