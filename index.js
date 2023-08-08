@@ -77,8 +77,10 @@ const _hasForbiddenPX = (node, options) => {
 
   /** early exit and ignore */
   if (
-    /* ignore media queries */
+    /* ignore atRules */
     (type === 'atrule' && ignoreAtRules.indexOf(node.name) !== -1) ||
+    /* ignore declarations that are children of atrules - eg: keyframes */
+    (type === 'decl' && node?.parent?.parent?.type === 'atrule' && ignoreAtRules.indexOf(node?.parent?.parent?.name) !== -1) ||
     /* ignore declarations ignored by props */
     (type === 'decl' && _propInIgnoreList(node.prop, ignore))
   ) {
