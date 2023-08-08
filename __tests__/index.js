@@ -237,3 +237,19 @@ testRule(useRem.rule, {
     },
   ],
 })
+
+// ignoreAtRules
+testRule(useRem.rule, {
+  ruleName: useRem.ruleName,
+
+  config: [true, {ignoreAtRules: ['keyframes']}],
+
+  skipBasicChecks: true,
+
+  accept: [
+    { code: '@keyframes move { from {top: 0px;} to {top: 200px;} }' }
+  ],
+
+  reject: [
+  ],
+})
