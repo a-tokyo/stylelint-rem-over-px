@@ -27,6 +27,8 @@ const defaultSecondaryOptions = {
   ignoreAtRules: ['media'],
   /** Base font size - used by autofix to convert px to rem */
   fontSize: 16,
+  /** New: disable auto-fixing */
+  disableFix: false,
 };
 
 /** Regex to match pixels declarations in a string */
@@ -145,15 +147,17 @@ const pluginHandler =
       return;
     }
 
+    const { disableFix, fontSize } = secondaryOptionObject;
+
     /* check for declarations */
     root.walkDecls((declaration) => {
       if (_hasForbiddenPX(declaration, secondaryOptionObject)) {
         /* handle fixing */
-        if (context.fix) {
+        if (context.fix && !disableFix) {
           // Apply fixes using PostCSS API
           declaration.value = _pxToRem(
             declaration.value,
-            secondaryOptionObject.fontSize,
+            fontSize,
           );
 
           // Return and don't report a problem
@@ -174,9 +178,9 @@ const pluginHandler =
     root.walkAtRules((atRule) => {
       if (_hasForbiddenPX(atRule, secondaryOptionObject)) {
         /* handle fixing */
-        if (context.fix) {
+        if (context.fix && !disableFix) {
           // Apply fixes using PostCSS API
-          atRule.value = _pxToRem(atRule.value, secondaryOptionObject.fontSize);
+          atRule.value = _pxToRem(atRule.value, fontSize);
 
           // Return and don't report a problem
           return;
