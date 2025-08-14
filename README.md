@@ -14,7 +14,7 @@ height: 1.5rem; // ok
 border: 1px solid #000000; // ok
 border: 2px solid #000000; // error -> can be autofixed to width: 0.125rem;
 @media (max-width: 768px) { display: none }; // ok
-background-image: url('https://exapmle.com?size=500pxX500px'); // ok
+background-image: url('https://example.com?size=500pxX500px'); // ok
 ```
 
 ## Installation
