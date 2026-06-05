@@ -343,3 +343,22 @@ testRule({
     },
   ],
 });
+
+// autofix: at-rule px -> rem conversion (mutates params, not value)
+testRule({
+  ruleName,
+  config: [true, { ignore: ['1px'] }],
+  fix: true,
+
+  accept: [],
+
+  reject: [
+    {
+      code: '@width: 10px;\n.foo { color: red; }',
+      fixed: '@width: 0.625rem;\n.foo { color: red; }',
+      message: messages.remOverPx('@width: 10px'),
+      line: 1,
+      column: 1,
+    },
+  ],
+});

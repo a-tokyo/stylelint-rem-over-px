@@ -188,8 +188,10 @@ const pluginHandler =
           fix: disableFix
             ? undefined
             : () => {
-                // Apply fixes using PostCSS API
-                atRule.value = _pxToRem(atRule.value, fontSize);
+                // Apply fixes using PostCSS API. At-rules are stringified from
+                // `params` (not `value`), which is also what `_hasForbiddenPX`
+                // inspects, so the fix must mutate `params`.
+                atRule.params = _pxToRem(atRule.params, fontSize);
               },
         });
       }

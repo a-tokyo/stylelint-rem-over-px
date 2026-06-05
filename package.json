@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/a-tokyo/stylelint-rem-over-px",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "postcss-value-parser": "^3.3.0 || ^4.0.2"
