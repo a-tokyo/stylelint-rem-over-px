@@ -1,11 +1,16 @@
 {
   "name": "stylelint-rem-over-px",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "A stylelint rule to enforce the usage of rem units over px units.",
+  "type": "module",
   "main": "index.js",
+  "exports": "./index.js",
   "files": [
     "index.js"
   ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/a-tokyo/stylelint-rem-over-px.git"
@@ -21,18 +26,18 @@
   },
   "homepage": "https://github.com/a-tokyo/stylelint-rem-over-px",
   "scripts": {
-    "test": "tape __tests__"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
     "postcss-value-parser": "^3.3.0 || ^4.0.2"
   },
   "devDependencies": {
-    "stylelint": "^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0",
-    "stylelint-test-rule-tape": "^0.2.0",
-    "tape": "^4.7.0"
+    "jest": "^30.0.0",
+    "jest-preset-stylelint": "^9.0.0",
+    "stylelint": "^17.0.0"
   },
   "peerDependencies": {
-    "stylelint": ">= 8"
+    "stylelint": ">= 17"
   },
   "keywords": [
     "stylelint",

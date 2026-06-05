@@ -1,7 +1,10 @@
-'use strict';
+import stylelint from 'stylelint';
+import valueParser from 'postcss-value-parser';
 
-const stylelint = require('stylelint');
-const valueParser = require('postcss-value-parser');
+const {
+  createPlugin,
+  utils: { report, ruleMessages },
+} = stylelint;
 
 /** plugin name - prefixes all rules as per stylelint requirements */
 const PLUGIN_NAME = 'rem-over-px';
@@ -10,12 +13,18 @@ const PLUGIN_NAME = 'rem-over-px';
 const ruleName = `${PLUGIN_NAME}/rem-over-px`;
 
 /** rule messages */
-const messages = stylelint.utils.ruleMessages(ruleName, {
+const messages = ruleMessages(ruleName, {
   /** Report message for prefer rem over px */
   remOverPx(val = '') {
     return `Expected px unit in "${val}" to be rem.`;
   },
 });
+
+/** rule metadata - required by stylelint to document and enable autofixing */
+const meta = {
+  url: 'https://github.com/a-tokyo/stylelint-rem-over-px',
+  fixable: true,
+};
 
 /** default secondary options */
 const defaultSecondaryOptions = {
@@ -32,7 +41,6 @@ const defaultSecondaryOptions = {
 };
 
 /** Regex to match pixels declarations in a string */
-// eslint-disable-next-line
 const regexPX = new RegExp(/(\d+\.?\d*)px/, 'g');
 
 /** Converts a string with px units to rem */
@@ -152,24 +160,18 @@ const pluginHandler =
     /* check for declarations */
     root.walkDecls((declaration) => {
       if (_hasForbiddenPX(declaration, secondaryOptionObject)) {
-        /* handle fixing */
-        if (context.fix && !disableFix) {
-          // Apply fixes using PostCSS API
-          declaration.value = _pxToRem(
-            declaration.value,
-            fontSize,
-          );
-
-          // Return and don't report a problem
-          return;
-        }
-
-        /* handle reporting */
-        stylelint.utils.report({
+        /* report - stylelint applies the fix callback when in fix mode (unless disabled) */
+        report({
           ruleName,
           result,
           node: declaration,
           message: messages.remOverPx(declaration),
+          fix: disableFix
+            ? undefined
+            : () => {
+                // Apply fixes using PostCSS API
+                declaration.value = _pxToRem(declaration.value, fontSize);
+              },
         });
       }
     });
@@ -177,32 +179,34 @@ const pluginHandler =
     // check for rules
     root.walkAtRules((atRule) => {
       if (_hasForbiddenPX(atRule, secondaryOptionObject)) {
-        /* handle fixing */
-        if (context.fix && !disableFix) {
-          // Apply fixes using PostCSS API
-          atRule.value = _pxToRem(atRule.value, fontSize);
-
-          // Return and don't report a problem
-          return;
-        }
-
-        /* handle reporting */
-        stylelint.utils.report({
+        /* report - stylelint applies the fix callback when in fix mode (unless disabled) */
+        report({
           ruleName,
           result,
           node: atRule,
           message: messages.remOverPx(atRule),
+          fix: disableFix
+            ? undefined
+            : () => {
+                // Apply fixes using PostCSS API
+                atRule.value = _pxToRem(atRule.value, fontSize);
+              },
         });
       }
     });
   };
+
+pluginHandler.ruleName = ruleName;
+pluginHandler.messages = messages;
+pluginHandler.meta = meta;
 
 /**
  * Stylelint plugin rem-over-px
  *
  * Enforces the usage of rem units over px units.
  */
-module.exports = stylelint.createPlugin(ruleName, pluginHandler);
+const plugin = createPlugin(ruleName, pluginHandler);
 
-module.exports.ruleName = ruleName;
-module.exports.messages = messages;
+export default plugin;
+
+export { ruleName, messages };

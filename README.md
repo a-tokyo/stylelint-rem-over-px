@@ -17,6 +17,13 @@ border: 2px solid #000000; // error -> can be autofixed to width: 0.125rem;
 background-image: url('https://example.com?size=500pxX500px'); // ok
 ```
 
+## Requirements
+
+- `stylelint` >= 17 (declared as a peer dependency)
+- Node.js >= 20.19.0
+
+> This package is published as an ES module (ESM). Versions `1.x` remain available on npm for projects on older stylelint (>= 8) or CommonJS setups.
+
 ## Installation
 
 ```
