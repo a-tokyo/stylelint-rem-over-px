@@ -73,6 +73,12 @@ const _hasForbiddenPX = (node, options) => {
   /** prop to check */
   const prop = type === 'decl' ? node.prop : null;
 
+  // fast path: a violation is only ever produced from a token containing the
+  // literal substring "px", so bail before the expensive value parse.
+  if (!value || value.indexOf('px') === -1) {
+    return false;
+  }
+
   /** parsed value */
   const parsed = valueParser(value);
   /* parse secondaryOptions */
