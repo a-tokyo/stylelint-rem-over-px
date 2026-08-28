@@ -43,6 +43,19 @@ const defaultSecondaryOptions = {
 /** Regex to match pixels declarations in a string */
 const regexPX = new RegExp(/(\d+\.?\d*)px/, 'g');
 
+/**
+ * At-rules whose child declarations are animation keyframes rather than normal
+ * style rules. Only these are skipped wholesale when their name is listed in
+ * `ignoreAtRules`; for any other at-rule (e.g. `media`, `supports`) a listed
+ * name only skips the at-rule's own prelude, not the declarations nested inside.
+ */
+const KEYFRAME_AT_RULES = [
+  'keyframes',
+  '-webkit-keyframes',
+  '-moz-keyframes',
+  '-o-keyframes',
+];
+
 /** Converts a string with px units to rem */
 const _pxToRem = (CSSString = '', fontSize = defaultSecondaryOptions.fontSize || 16) =>
   CSSString.replace(regexPX, (match, n) => `${n / fontSize}rem`);
@@ -91,12 +104,39 @@ const _hasForbiddenPX = (node, options) => {
   /** Whether we matched px declarations */
   let hasPX = false;
 
+  /**
+   * Whether this declaration lives - at any depth - inside a keyframes at-rule
+   * (`@keyframes`, `@-webkit-keyframes`, ...) whose name is listed in
+   * `ignoreAtRules`. We walk every ancestor (not just the grandparent) and
+   * don't stop at the first keyframes block, so an ignored outer block is still
+   * honoured even if an unignored inner one sits in between.
+   */
+  let insideIgnoredKeyframes = false;
+  if (type === 'decl') {
+    for (let ancestor = node.parent; ancestor; ancestor = ancestor.parent) {
+      if (
+        ancestor.type === 'atrule' &&
+        /* Recognise the block by its lowercased name (compared against our own
+           fixed list), then match the user's `ignoreAtRules` entries verbatim -
+           the same case-sensitive comparison every other name check in this
+           rule uses (`ignoreAtRules`, `ignoreFunctions`, `ignore`). */
+        KEYFRAME_AT_RULES.indexOf(ancestor.name.toLowerCase()) !== -1 &&
+        ignoreAtRules.indexOf(ancestor.name) !== -1
+      ) {
+        insideIgnoredKeyframes = true;
+        break;
+      }
+    }
+  }
+
   /** early exit and ignore */
   if (
     /* ignore atRules */
     (type === 'atrule' && ignoreAtRules.indexOf(node.name) !== -1) ||
-    /* ignore declarations that are children of atrules - eg: keyframes */
-    (type === 'decl' && node?.parent?.parent?.type === 'atrule' && ignoreAtRules.indexOf(node?.parent?.parent?.name) !== -1) ||
+    /* ignore declarations nested (at any depth) in an ignored keyframes at-rule
+       - eg: @keyframes. Other at-rules (media, supports, ...) only ignore their
+       own prelude, so their nested declarations are still linted. */
+    insideIgnoredKeyframes ||
     /* ignore declarations ignored by props */
     (type === 'decl' && _propInIgnoreList(node.prop, ignore))
   ) {
@@ -118,7 +158,7 @@ const _hasForbiddenPX = (node, options) => {
 
     if (
       currNode.type === 'word' &&
-      (matched = currNode.value.match(/^([-,+]?\d+(\.\d+)?px)$/))
+      (matched = currNode.value.match(/^([-+]?\d+(\.\d+)?px)$/))
     ) {
       /** matched px value. eg: '10px' */
       const px = matched[1];
@@ -171,7 +211,7 @@ const pluginHandler =
           ruleName,
           result,
           node: declaration,
-          message: messages.remOverPx(declaration),
+          message: messages.remOverPx(declaration.value),
           fix: disableFix
             ? undefined
             : () => {
@@ -190,7 +230,7 @@ const pluginHandler =
           ruleName,
           result,
           node: atRule,
-          message: messages.remOverPx(atRule),
+          message: messages.remOverPx(atRule.params),
           fix: disableFix
             ? undefined
             : () => {

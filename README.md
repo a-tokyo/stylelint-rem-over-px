@@ -73,6 +73,12 @@ Default: ["url"]
 
 ignore check for @ rules.
 
+For most at-rules (e.g. `media`, `supports`) a listed name only skips the
+at-rule's own prelude - so `@media (max-width: 768px)` is not flagged, but `px`
+in declarations nested inside the block still is. Listing a keyframes at-rule
+(`keyframes`, `-webkit-keyframes`, ...) additionally skips every declaration
+inside it.
+
 Default: ["media"]
 
 ### fontSize: number
